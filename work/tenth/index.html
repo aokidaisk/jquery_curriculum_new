@@ -99,9 +99,9 @@
       });
       $('body').on('click', '[data-js="page-prev"]', function (e) {
         if ($(this).hasClass('disabled')) {
-          e.preventDefault();
+          invalid(e);
         } else {
-          e.preventDefault();
+          invalid(e);
           var searchword = $('.search__text__input').val();
           num = num - 1;
           clear();
@@ -110,9 +110,9 @@
       });
       $('body').on('click', '[data-js="page-next"]', function (e) {
         if ($(this).hasClass('disabled')) {
-          e.preventDefault();
+          invalid(e);
         } else {
-          e.preventDefault();
+          invalid(e);
           var searchword = $('.search__text__input').val();
           num = num + 1;
           clear();
@@ -139,10 +139,14 @@
             page: num
           },
         }).done(function (data) {
-          $.each(data.Items, function (i, item) {
-            listmaker(item);
-          });
-          pagermaker(data);
+          if (data.count > 0) {
+            $.each(data.Items, function (i, item) {
+              listmaker(item);
+            });
+            pagermaker(data);
+          } else {
+            notWord();
+          }
         }).fail(function (jqXHR) {
           console.log(jqXHR);
           if (jqXHR.status === 0) {
@@ -161,13 +165,8 @@
         });
       };
       function listmaker(item) {
-        var list = $(
-          '<li class="lists__item">' + '<div class="lists__item__inner">' +
-          '<a href="' + item.Item.itemUrl + '"class="lists__item__link "target="_blank">' +
-          '<img src="' + item.Item.largeImageUrl + '" class="lists__item__img" alt="' + item.Item.title + '">' +
-          '<p class="lists__item__detail">作品名：' + item.Item.title + '</p>' +
-          '<p class="lists__item__detail">作者　：' + item.Item.author + '</p>' +
-          '<p class="lists__item__detail">出版社：' + item.Item.publisherName + '</p>' + '</a>' + '</div>' + '</li>');
+        var list = '';
+        list += '<li class="lists__item">' + '<div class="lists__item__inner">' + '<a href="' + item.Item.itemUrl + '"class="lists__item__link "target="_blank">' + '<img src="' + item.Item.largeImageUrl + '" class="lists__item__img" alt="' + item.Item.title + '">' + '<p class="lists__item__detail">作品名：' + item.Item.title + '</p>' + '<p class="lists__item__detail">作者　：' + item.Item.author + '</p>' + '<p class="lists__item__detail">出版社：' + item.Item.publisherName + '</p>' + '</a>' + '</div>' + '</li>';
         $('.lists').append(list);
       };
       function pagermaker(data) {
@@ -187,6 +186,9 @@
           pager += '<a class="btn-item" data-js="page-next" href="">' + '次へ' + '</div>' + '</div>'
         };
         $('.lists').after(pager);
+      };
+      function invalid(e) {
+        e.preventDefault();
       };
 
       //エラーfunction
