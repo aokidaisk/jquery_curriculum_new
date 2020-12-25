@@ -37,10 +37,9 @@
     // .addClass() クラスを追加します。
     // .removeClass() クラスを削除します。
     $(function () {
-      $('.nav').find('li').click(function() {
-        $('.contents').find('li').addClass('is-hidden');
-        var num =$(this).index();
-        $('.contents').find('li').eq(num).removeClass('is-hidden');
+      $('.nav').find('li').click(function () {
+        var num = $(this).index();
+        $('.contents').find('li').addClass('is-hidden').eq(num).removeClass('is-hidden');
       });
     });
   </script>
